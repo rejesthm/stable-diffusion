@@ -41,4 +41,6 @@ notification.mp3
 /test/test_outputs
 /cache
 trace.json
+webui_launch.log
+webui_output.log
 /sysinfo-????-??-??-??-??.json
