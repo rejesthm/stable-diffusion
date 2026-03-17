@@ -1,0 +1,3 @@
+# Backend uses the same dependencies as the root project.
+# Install from project root: pip install -r requirements.txt
+# The backend runs from project root and uses modules/ from there.
