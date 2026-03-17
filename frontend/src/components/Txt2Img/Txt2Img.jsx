@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { txt2img } from '../../api/txt2img'
 import { useModels } from '../../hooks/useModels'
 import { useProgressContext } from '../ProgressBar/ProgressBar'
+import { setOptions } from '../../api/models'
 
 export default function Txt2Img() {
-  const { samplers, loading, error } = useModels()
+  const { samplers, sdModels, options, loading, error } = useModels()
   const { setActiveTask } = useProgressContext()
   const [prompt, setPrompt] = useState('')
+  const [sdModel, setSdModel] = useState('')
   const [negativePrompt, setNegativePrompt] = useState('')
   const [steps, setSteps] = useState(20)
   const [cfgScale, setCfgScale] = useState(7)
@@ -17,6 +19,23 @@ export default function Txt2Img() {
   const [images, setImages] = useState([])
   const [generating, setGenerating] = useState(false)
   const [genError, setGenError] = useState(null)
+
+  useEffect(() => {
+    if (options?.sd_model_checkpoint) {
+      setSdModel(options.sd_model_checkpoint)
+    } else if (sdModels.length > 0) {
+      setSdModel((prev) => prev || sdModels[0].title)
+    }
+  }, [options, sdModels])
+
+  async function handleModelChange(value) {
+    setSdModel(value)
+    try {
+      await setOptions({ sd_model_checkpoint: value })
+    } catch (err) {
+      setGenError(err.message)
+    }
+  }
 
   async function handleGenerate() {
     setGenerating(true)
@@ -96,6 +115,18 @@ export default function Txt2Img() {
 
         <div className="card">
           <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--color-text)' }}>Generation settings</h3>
+          <div className="mb-4">
+            <label className="label">Model</label>
+            <select
+              value={sdModel}
+              onChange={(e) => handleModelChange(e.target.value)}
+              className="input-field"
+            >
+              {sdModels.map((m) => (
+                <option key={m.title} value={m.title}>{m.title}</option>
+              ))}
+            </select>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="label">Steps</label>

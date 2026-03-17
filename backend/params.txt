@@ -1,0 +1,3 @@
+symmetry, Cat, (space, gradient background:0.8), masterpiece, best quality, amazing detail, high definition,
+Negative prompt: bad quality, worst quality, worst detail, text, patreon, signature, steam, young,
+Steps: 30, Sampler: DPM++ 2M SDE, Schedule type: Automatic, CFG scale: 5.0, Seed: 857643285431198, Size: 512x512, Model hash: 879db523c3, Model: dreamshaper_8, Version: v1.10.1-90-g22e8abc3

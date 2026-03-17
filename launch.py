@@ -1,3 +1,13 @@
+"""Entry point - runs from project root. Adds backend to path and delegates."""
+import os
+import sys
+
+project_root = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.join(project_root, "backend")
+sys.path.insert(0, project_root)
+sys.path.insert(0, backend_dir)
+os.chdir(project_root)
+
 from modules import launch_utils
 
 args = launch_utils.args
@@ -10,14 +20,11 @@ if args.uv:
     from modules.uv_hook import patch
     patch()
 
-
 commit_hash = launch_utils.commit_hash
 git_tag = launch_utils.git_tag
-
 run = launch_utils.run
 is_installed = launch_utils.is_installed
 repo_dir = launch_utils.repo_dir
-
 run_pip = launch_utils.run_pip
 check_run_python = launch_utils.check_run_python
 git_clone = launch_utils.git_clone
@@ -32,9 +39,7 @@ start = launch_utils.start
 def main():
     if args.dump_sysinfo:
         filename = launch_utils.dump_sysinfo()
-
         print(f"Sysinfo saved as {filename}. Exiting...")
-
         exit(0)
 
     launch_utils.startup_timer.record("initial startup")
@@ -46,7 +51,6 @@ def main():
     if args.test_server:
         configure_for_tests()
 
-    # --backend: Run API-only backend with CORS for React frontend
     if args.backend:
         from backend.main import run
         run()

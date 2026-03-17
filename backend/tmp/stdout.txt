@@ -1,0 +1,8 @@
+ Volume in drive D is Projects
+ Volume Serial Number is 2075-989D
+
+ Directory of D:\Personal\stable-diffusion-webui\venv\Scripts
+
+03/17/2026  10:17 AM           268,152 python.exe
+               1 File(s)        268,152 bytes
+               0 Dir(s)  69,712,617,472 bytes free

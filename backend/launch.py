@@ -10,8 +10,9 @@ import sys
 # Ensure we run from project root (parent of backend/)
 backend_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(backend_dir)
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+for p in (project_root, backend_dir):
+    if p not in sys.path:
+        sys.path.insert(0, p)
 os.chdir(project_root)
 
 # Add --nowebui so existing launch logic treats this as API-only

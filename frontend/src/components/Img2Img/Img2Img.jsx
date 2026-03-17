@@ -1,11 +1,13 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { img2img } from '../../api/img2img'
 import { useModels } from '../../hooks/useModels'
 import { useProgressContext } from '../ProgressBar/ProgressBar'
+import { setOptions } from '../../api/models'
 
 export default function Img2Img() {
-  const { samplers, loading, error } = useModels()
+  const { samplers, sdModels, options, loading, error } = useModels()
   const { setActiveTask } = useProgressContext()
+  const [sdModel, setSdModel] = useState('')
   const [prompt, setPrompt] = useState('')
   const [negativePrompt, setNegativePrompt] = useState('')
   const [initImage, setInitImage] = useState(null)
@@ -34,6 +36,23 @@ export default function Img2Img() {
       const reader = new FileReader()
       reader.onload = () => setInitImage(reader.result)
       reader.readAsDataURL(file)
+    }
+  }
+
+  useEffect(() => {
+    if (options?.sd_model_checkpoint) {
+      setSdModel(options.sd_model_checkpoint)
+    } else if (sdModels.length > 0) {
+      setSdModel((prev) => prev || sdModels[0].title)
+    }
+  }, [options, sdModels])
+
+  async function handleModelChange(value) {
+    setSdModel(value)
+    try {
+      await setOptions({ sd_model_checkpoint: value })
+    } catch (err) {
+      setGenError(err.message)
     }
   }
 
@@ -153,6 +172,18 @@ export default function Img2Img() {
 
         <div className="card">
           <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--color-text)' }}>Settings</h3>
+          <div className="mb-4">
+            <label className="label">Model</label>
+            <select
+              value={sdModel}
+              onChange={(e) => handleModelChange(e.target.value)}
+              className="input-field"
+            >
+              {sdModels.map((m) => (
+                <option key={m.title} value={m.title}>{m.title}</option>
+              ))}
+            </select>
+          </div>
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>
               <label className="label">Steps</label>
